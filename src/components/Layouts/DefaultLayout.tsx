@@ -6,9 +6,11 @@ interface DefaultLayoutProps {
 
 function DefaultLayout({ children }: DefaultLayoutProps) {
   return (
-    <div>
+    <div className="flex flex-row h-screen">
       <Header />
-      {children}
+      <div className="w-full h-full flex flex-col">
+        <div className="w-full flex-grow">{children}</div>
+      </div>
     </div>
   );
 }

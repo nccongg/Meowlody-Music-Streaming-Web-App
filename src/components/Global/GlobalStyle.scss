@@ -1,15 +1,16 @@
 @import 'normalize.css';
 
 :root {
-  --primary-color: #0ee27c;
-  --primary-hover-color: #06c649;
+  --primary-color: #9333ea;
+  --primary-hover-color: #8d29ea;
 
   --black: black;
   --white: white;
   --text-color: #333;
-  --bg-color: #1c1c22;
+  --bg-color: #111827;
   --bg-item-color: #27272c;
   --text-description-color: rgba(255, 255, 255, 0.6);
+  --line-color: rgba(77, 76, 76, 0.6);
   // Default layout
   --default-layout-header-height: 60px;
 }
@@ -43,7 +44,6 @@ body {
   line-height: 1.5;
   text-rendering: optimizeSpeed;
   background-color: var(--bg-color);
-  color: var(--white);
 }
 
 span,
