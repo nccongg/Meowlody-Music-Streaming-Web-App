@@ -34,7 +34,7 @@ function Header() {
               return (
                 <Link
                   key={index}
-                  className={`flex relative items-center hover:bg-[var(--bg-item-color)] hover:text-white p-5 text-description transition-colors before:absolute before:bottom-0 before:left-[0%] before:w-0 before:h-[2px] before:bg-white ${
+                  className={`flex relative items-center hover:bg-[var(--bg-item-color)] hover:text-primary p-5 text-description transition-colors before:absolute before:bottom-0 before:left-[0%] before:w-0 before:h-[2px] before:bg-white ${
                     pathName === item.path && 'text-white before:transition-all before:duration-500 before:w-full'
                   }`}
                   to={item.path}

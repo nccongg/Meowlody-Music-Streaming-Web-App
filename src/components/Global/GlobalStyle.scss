@@ -2,31 +2,33 @@
 
 :root {
   --primary-color: #9333ea;
-  --primary-hover-color: #8d29ea;
+  --primary-hover-color: #6e1fb8;
 
   --black: black;
   --white: white;
   --text-color: #333;
   --bg-color: #111827;
   --bg-item-color: #27272c;
+  --bg-albums-color: #1f2937;
+  --bg-albums-hover-color: #374151;
   --text-description-color: rgba(255, 255, 255, 0.6);
   --line-color: rgba(77, 76, 76, 0.6);
   // Default layout
   --default-layout-header-height: 60px;
 }
 
-@font-face {
-  font-family: 'JetBrains Mono';
-  src: url('/src/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Atkinson Mono';
-  src: url('/src/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
+// @font-face {
+//   font-family: 'JetBrains Mono';
+//   src: url('/src/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf') format('truetype');
+//   font-weight: normal;
+//   font-style: normal;
+// }
+// @font-face {
+//   font-family: 'Atkinson Mono';
+//   src: url('/src/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Bold.ttf') format('truetype');
+//   font-weight: bold;
+//   font-style: normal;
+// }
 
 * {
   box-sizing: border-box;
@@ -35,15 +37,16 @@
 }
 
 html {
-  font-size: 62.5%;
+  font-size: 16px;
 }
 
 body {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.8rem;
-  line-height: 1.5;
-  text-rendering: optimizeSpeed;
-  background-color: var(--bg-color);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #111827;
+  color: white;
 }
 
 span,

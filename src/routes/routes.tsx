@@ -1,6 +1,6 @@
-import Home from '../pages/home';
-import LikedSongs from '../pages/likedSongs';
-import Library from '../pages/yourLibrary';
+import Home from '../pages/Home';
+import LikedSongs from '../pages/LikedSongs';
+import Library from '../pages/YourLibrary';
 
 const publicRoutes = [
   { path: '/', component: Home },
