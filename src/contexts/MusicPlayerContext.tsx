@@ -1,245 +1,169 @@
-import React, { createContext, useContext, useState, useRef, useEffect } from 'react';
-import { Track } from '../services/music';
+import React, { createContext, useState, useRef, useEffect, ReactNode } from 'react';
+import { Track } from '../types/music';
+import { MusicPlayerContextType } from '../hooks/useMusicPlayer';
 
-interface MusicPlayerContextType {
-  currentTrack: Track | null;
-  isPlaying: boolean;
-  currentTime: number;
-  duration: number;
-  volume: number;
-  isShuffling: boolean;
-  isRepeating: boolean;
-  queue: Track[];
-  playTrack: (track: Track) => void;
-  togglePlay: () => void;
-  setProgress: (value: number) => void;
-  setVolume: (value: number) => void;
-  toggleShuffle: () => void;
-  toggleRepeat: () => void;
-  playNext: () => void;
-  playPrevious: () => void;
-  seekForward: () => void;
-  seekBackward: () => void;
+export const MusicPlayerContext = createContext<MusicPlayerContextType | null>(null);
+
+interface MusicPlayerProviderProps {
+  children: ReactNode;
 }
 
-const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined);
-
-export function MusicPlayerProvider({ children }: { children: React.ReactNode }) {
+export function MusicPlayerProvider({ children }: MusicPlayerProviderProps) {
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(0.7);
+  const [volume, setVolume] = useState(50);
   const [isShuffling, setIsShuffling] = useState(false);
   const [isRepeating, setIsRepeating] = useState(false);
   const [queue, setQueue] = useState<Track[]>([]);
-  const [playHistory, setPlayHistory] = useState<Track[]>([]);
+  const [history, setHistory] = useState<Track[]>([]);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
+    audioRef.current = new Audio();
+    audioRef.current.volume = volume / 100;
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!audioRef.current || !currentTrack) return;
+
+    audioRef.current.src = currentTrack.audioUrl;
+    if (isPlaying) {
+      audioRef.current.play();
     }
 
-    const audio = audioRef.current;
-    audio.volume = volume;
-
     const handleTimeUpdate = () => {
-      setCurrentTime(audio.currentTime);
+      if (audioRef.current) {
+        setCurrentTime(audioRef.current.currentTime);
+      }
     };
 
     const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
+      if (audioRef.current) {
+        setDuration(audioRef.current.duration);
+      }
     };
 
     const handleEnded = () => {
       if (isRepeating) {
-        audio.currentTime = 0;
-        audio.play();
+        audioRef.current?.play();
       } else {
         playNext();
       }
     };
 
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-    audio.addEventListener('ended', handleEnded);
+    audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+    audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audioRef.current.addEventListener('ended', handleEnded);
 
     return () => {
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      audio.removeEventListener('ended', handleEnded);
-    };
-  }, [isRepeating]);
-
-  // Add keyboard controls for seeking
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (!audioRef.current || !currentTrack) return;
-
-      switch (e.key) {
-        case 'ArrowRight':
-          seekForward();
-          break;
-        case 'ArrowLeft':
-          seekBackward();
-          break;
+      if (audioRef.current) {
+        audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+        audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        audioRef.current.removeEventListener('ended', handleEnded);
       }
     };
+  }, [currentTrack, isPlaying, isRepeating]);
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [currentTrack]);
-
-  const playTrack = async (track: Track) => {
-    if (!audioRef.current) return;
-
-    try {
-      if (currentTrack?.id === track.id) {
-        togglePlay();
-        return;
-      }
-
-      // Add current track to history if exists
-      if (currentTrack) {
-        setPlayHistory((prev) => [...prev, currentTrack]);
-      }
-
-      // Update queue if not already in it
-      if (!queue.find((t) => t.id === track.id)) {
-        setQueue((prev) => [...prev, track]);
-      }
-
-      audioRef.current.src = track.previewUrl;
-      setCurrentTrack(track);
-
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        await playPromise;
-        setIsPlaying(true);
-      }
-    } catch (error) {
-      console.error('Error playing track:', error);
-      setIsPlaying(false);
-    }
-  };
-
-  const togglePlay = async () => {
+  const togglePlay = () => {
     if (!audioRef.current || !currentTrack) return;
 
-    try {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          await playPromise;
-          setIsPlaying(true);
-        }
-      }
-    } catch (error) {
-      console.error('Error toggling playback:', error);
-      setIsPlaying(false);
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
     }
+    setIsPlaying(!isPlaying);
   };
 
-  const setProgress = (value: number) => {
+  const setProgress = (progress: number) => {
     if (!audioRef.current) return;
-    const time = (value / 100) * duration;
+    const time = (progress / 100) * duration;
     audioRef.current.currentTime = time;
     setCurrentTime(time);
   };
 
-  const handleVolumeChange = (value: number) => {
+  const handleVolumeChange = (newVolume: number) => {
     if (!audioRef.current) return;
-    const newVolume = Math.max(0, Math.min(1, value));
-    audioRef.current.volume = newVolume;
+    const normalizedVolume = newVolume / 100;
+    audioRef.current.volume = normalizedVolume;
     setVolume(newVolume);
   };
 
-  const toggleShuffle = () => {
-    setIsShuffling((prev) => !prev);
-  };
-
-  const toggleRepeat = () => {
-    setIsRepeating((prev) => !prev);
-  };
+  const toggleShuffle = () => setIsShuffling(!isShuffling);
+  const toggleRepeat = () => setIsRepeating(!isRepeating);
 
   const playNext = () => {
     if (!currentTrack || queue.length === 0) return;
 
-    const currentIndex = queue.findIndex((track) => track.id === currentTrack.id);
-    let nextTrack: Track | undefined;
+    // Add current track to history
+    setHistory((prev) => [currentTrack, ...prev]);
 
-    if (isShuffling) {
-      const remainingTracks = queue.filter((track) => track.id !== currentTrack.id);
-      nextTrack = remainingTracks[Math.floor(Math.random() * remainingTracks.length)];
-    } else {
-      nextTrack = queue[currentIndex + 1];
-    }
+    // Get next track
+    const nextTrack = isShuffling ? queue[Math.floor(Math.random() * queue.length)] : queue[0];
 
-    if (nextTrack) {
-      playTrack(nextTrack);
-    } else if (isRepeating) {
-      playTrack(queue[0]);
-    }
+    // Remove the track from queue
+    setQueue((prev) => prev.filter((track) => track.id !== nextTrack.id));
+
+    // Play the next track
+    setCurrentTrack(nextTrack);
+    setIsPlaying(true);
   };
 
   const playPrevious = () => {
-    if (playHistory.length === 0) return;
+    if (!currentTrack || history.length === 0) return;
 
-    const previousTrack = playHistory[playHistory.length - 1];
-    setPlayHistory((prev) => prev.slice(0, -1));
-    playTrack(previousTrack);
+    // Add current track back to queue
+    setQueue((prev) => [currentTrack, ...prev]);
+
+    // Get previous track from history
+    const previousTrack = history[0];
+    setHistory((prev) => prev.slice(1));
+
+    // Play the previous track
+    setCurrentTrack(previousTrack);
+    setIsPlaying(true);
   };
 
-  const seekForward = () => {
-    if (!audioRef.current || !currentTrack) return;
-    const newTime = Math.min(audioRef.current.currentTime + 10, duration);
-    audioRef.current.currentTime = newTime;
-    setCurrentTime(newTime);
+  const addToQueue = (track: Track) => {
+    setQueue((prev) => [...prev, track]);
   };
 
-  const seekBackward = () => {
-    if (!audioRef.current || !currentTrack) return;
-    const newTime = Math.max(audioRef.current.currentTime - 10, 0);
-    audioRef.current.currentTime = newTime;
-    setCurrentTime(newTime);
+  const playTrack = (track: Track) => {
+    if (currentTrack) {
+      setHistory((prev) => [currentTrack, ...prev]);
+    }
+    setCurrentTrack(track);
+    setIsPlaying(true);
   };
 
-  return (
-    <MusicPlayerContext.Provider
-      value={{
-        currentTrack,
-        isPlaying,
-        currentTime,
-        duration,
-        volume,
-        isShuffling,
-        isRepeating,
-        queue,
-        playTrack,
-        togglePlay,
-        setProgress,
-        setVolume: handleVolumeChange,
-        toggleShuffle,
-        toggleRepeat,
-        playNext,
-        playPrevious,
-        seekForward,
-        seekBackward,
-      }}
-    >
-      {children}
-    </MusicPlayerContext.Provider>
-  );
-}
+  const contextValue: MusicPlayerContextType = {
+    currentTrack,
+    currentTime,
+    duration,
+    isPlaying,
+    volume,
+    isShuffling,
+    isRepeating,
+    togglePlay,
+    setProgress,
+    setVolume: handleVolumeChange,
+    toggleShuffle,
+    toggleRepeat,
+    playNext,
+    playPrevious,
+    addToQueue,
+    playTrack,
+  };
 
-export function useMusicPlayer() {
-  const context = useContext(MusicPlayerContext);
-  if (context === undefined) {
-    throw new Error('useMusicPlayer must be used within a MusicPlayerProvider');
-  }
-  return context;
+  return <MusicPlayerContext.Provider value={contextValue}>{children}</MusicPlayerContext.Provider>;
 }

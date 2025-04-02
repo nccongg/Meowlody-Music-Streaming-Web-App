@@ -1,34 +1,102 @@
 @import 'normalize.css';
 
 :root {
-  --primary-color: #9333ea;
-  --primary-hover-color: #6e1fb8;
+  // Brand Colors
+  --color-brand-primary: #9333ea;
+  --color-brand-secondary: #7928ca;
 
-  --black: black;
-  --white: white;
-  --text-color: #333;
-  --bg-color: #111827;
-  --bg-item-color: #27272c;
-  --bg-albums-color: #1f2937;
-  --bg-albums-hover-color: #374151;
-  --text-description-color: rgba(255, 255, 255, 0.6);
-  --line-color: rgba(77, 76, 76, 0.6);
-  // Default layout
-  --default-layout-header-height: 60px;
+  // Background Colors
+  --color-bg-primary: #1e1e1e;
+  --color-bg-secondary: #1a1625;
+  --color-bg-sidebar: #15132b;
+  --color-bg-card: #1a1625;
+  --color-bg-hover: #2a2141;
+  --color-bg-gradient: linear-gradient(180deg, rgba(147, 51, 234, 0.5) 0%, rgba(25, 22, 37, 1) 100%);
+
+  // Text Colors
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  --color-text-muted: #e1e1e6;
+
+  // Interactive Colors
+  --color-interactive-primary: #9333ea;
+  --color-interactive-hover: #7928ca;
+  --color-interactive-muted: #4b4b4b;
+
+  // Border Colors
+  --color-border-primary: rgba(255, 255, 255, 0.1);
+  --color-border-secondary: #2a2141;
+
+  // Specific Component Colors
+  --color-player-bg: #2a2141;
+  --color-progress-bar-bg: rgba(255, 255, 255, 0.1);
+  --color-volume-slider-bg: rgba(255, 255, 255, 0.1);
+
+  // Layout
+  --spacing-xs: 0.25rem; // 4px
+  --spacing-sm: 0.5rem; // 8px
+  --spacing-md: 1rem; // 16px
+  --spacing-lg: 1.5rem; // 24px
+  --spacing-xl: 2rem; // 32px
+
+  // Component Sizes
+  --sidebar-width-collapsed: 5.5rem; // 88px
+  --sidebar-width-expanded: 16rem; // 256px
+  --player-height: 6rem; // 96px
+  --header-height: 3.75rem; // 60px
+  --icon-size: 1.5rem; // 24px
+  --icon-size-lg: 2rem; // 32px
+
+  // Border Radius
+  --radius-sm: 0.25rem; // 4px
+  --radius-md: 0.5rem; // 8px
+  --radius-lg: 1rem; // 16px
+  --radius-full: 9999px;
+
+  // Transitions
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+
+  // Z-index
+  --z-sidebar: 50;
+  --z-header: 40;
+  --z-player: 30;
+  --z-modal: 100;
 }
 
-// @font-face {
-//   font-family: 'JetBrains Mono';
-//   src: url('/src/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf') format('truetype');
-//   font-weight: normal;
-//   font-style: normal;
-// }
-// @font-face {
-//   font-family: 'Atkinson Mono';
-//   src: url('/src/assets/fonts/JetBrains_Mono/static/JetBrainsMono-Bold.ttf') format('truetype');
-//   font-weight: bold;
-//   font-style: normal;
-// }
+// Dark theme overrides (if needed)
+[data-theme='dark'] {
+  // Add dark theme specific overrides here if needed
+}
+
+// Utility classes
+.text-brand {
+  color: var(--color-brand-primary);
+}
+
+.bg-brand {
+  background-color: var(--color-brand-primary);
+}
+
+.hover-brand {
+  &:hover {
+    color: var(--color-interactive-hover);
+  }
+}
+
+.bg-gradient {
+  background: var(--color-bg-gradient);
+}
+
+// Common transitions
+.transition-standard {
+  transition: all var(--transition-normal);
+}
+
+.transition-fast {
+  transition: all var(--transition-fast);
+}
 
 * {
   box-sizing: border-box;
@@ -45,8 +113,8 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #111827;
-  color: white;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
 }
 
 span,

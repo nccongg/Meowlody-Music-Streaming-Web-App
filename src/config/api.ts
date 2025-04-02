@@ -1,6 +1,6 @@
 export const JAMENDO_CONFIG = {
-  clientId: 'e0a05e20',
-  baseUrl: 'https://api.jamendo.com/v3.0',
+  baseUrl: import.meta.env.VITE_API_BASE_URL,
+  clientId: import.meta.env.VITE_JAMENDO_CLIENT_ID,
   defaultImageSize: '400',
   defaultAudioFormat: 'mp32',
-} as const;
+};

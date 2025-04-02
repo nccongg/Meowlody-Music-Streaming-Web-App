@@ -1,22 +1,61 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import MusicPlayer from './components/Bases/MusicPlayer';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { MusicPlayerProvider } from './contexts/MusicPlayerContext';
-import DefaultLayout from './components/Layouts/DefaultLayout';
+import { MainLayout } from './components/layout/MainLayout';
+import { MusicPlayer } from './components/music/Player/MusicPlayer';
+import { Home, Search, Library } from './pages';
+import { AnimatePresence } from 'framer-motion';
+import { AnimatedPage } from './components/AnimatedPage';
+import { VideoBackground } from './components/VideoBackground';
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <AnimatedPage>
+              <Home />
+            </AnimatedPage>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <AnimatedPage>
+              <Search />
+            </AnimatedPage>
+          }
+        />
+        <Route
+          path="/library"
+          element={
+            <AnimatedPage>
+              <Library />
+            </AnimatedPage>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
+  );
+}
 
 function App() {
   return (
     <MusicPlayerProvider>
       <Router basename="/Meowlody">
-        <div className="relative min-h-screen bg-gray-900 text-white">
-          <div className="h-[calc(100vh-96px)]">
-            <DefaultLayout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-              </Routes>
-            </DefaultLayout>
+        <div className="relative min-h-screen text-white flex flex-col">
+          <VideoBackground videoSource="./assets/sky.mp4" />
+          <div className="flex-1 flex justify-center">
+            <MainLayout>
+              <AnimatedRoutes />
+            </MainLayout>
           </div>
-          <div className="fixed bottom-0 left-0 right-0 z-50">
+          <div className="h-24">
+            {' '}
+            {/* Fixed height for music player space */}
             <MusicPlayer />
           </div>
         </div>
