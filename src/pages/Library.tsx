@@ -4,11 +4,16 @@ import { useMusicPlayer } from '../hooks/useMusicPlayer';
 
 export default function Library() {
   const [activeTab, setActiveTab] = useState<'playlists' | 'liked'>('playlists');
-  const { playTrack } = useMusicPlayer();
+  const { playSong } = useMusicPlayer();
 
   // This would typically come from a backend service
   const playlists: { id: string; name: string; tracks: Track[] }[] = [];
   const likedSongs: Track[] = [];
+
+  // Hàm xử lý khi người dùng chọn phát một bài hát
+  const handlePlayTrack = (track: Track) => {
+    playSong(track.id, track.title);
+  };
 
   return (
     <div className="p-8">
@@ -62,7 +67,7 @@ export default function Library() {
               <div
                 key={track.id}
                 className="flex items-center gap-4 p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
-                onClick={() => playTrack(track)}
+                onClick={() => handlePlayTrack(track)}
               >
                 <img src={track.album.imageUrl} alt={track.title} className="w-12 h-12 rounded object-cover" />
                 <div>

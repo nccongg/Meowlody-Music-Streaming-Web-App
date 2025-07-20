@@ -11,6 +11,30 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Sidebar variables */
+  --sidebar-width-collapsed: 80px;
+  --sidebar-width-expanded: 260px;
+  --z-sidebar: 40;
+
+  /* Spacing variables */
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Icon sizes */
+  --icon-size: 20px;
+  --icon-size-lg: 28px;
+
+  /* Colors */
+  --color-brand-primary: #8b5cf6; /* Purple color for primary elements */
+  --color-text-primary: #ffffff;
+  --color-text-muted: #a1a1aa;
+
+  /* Radius */
+  --radius-md: 8px;
 }
 
 body {
@@ -27,4 +51,32 @@ button {
 
 #root {
   min-height: 100vh;
+}
+
+@layer utilities {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .transition-standard {
+    transition: all 0.3s ease;
+  }
 }

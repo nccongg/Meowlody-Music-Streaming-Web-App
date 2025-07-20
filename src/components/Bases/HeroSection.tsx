@@ -4,47 +4,85 @@ import { JamendoService } from '../../services/api/jamendo';
 import { useMusicPlayer } from '../../hooks/useMusicPlayer';
 
 function HeroSection() {
-  const [featuredTrack, setFeaturedTrack] = useState<Track | null>(null);
-  const { playTrack } = useMusicPlayer();
+  const [featuredTracks, setFeaturedTracks] = useState<Track[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const { playSong } = useMusicPlayer();
 
   useEffect(() => {
-    const fetchFeaturedTrack = async () => {
+    const fetchFeaturedTracks = async () => {
       try {
-        const tracks = await JamendoService.getTrendingTracks();
-        if (tracks.length > 0) {
-          setFeaturedTrack(tracks[0]);
-        }
+        const trendingTracks = await JamendoService.getTrendingTracks();
+        setFeaturedTracks(trendingTracks.slice(0, 3));
       } catch (error) {
-        console.error('Failed to fetch featured track:', error);
+        console.error('Failed to fetch featured tracks:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchFeaturedTrack();
+    fetchFeaturedTracks();
   }, []);
 
-  if (!featuredTrack) {
-    return null;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % featuredTracks.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [featuredTracks.length]);
+
+  if (isLoading || featuredTracks.length === 0) {
+    return (
+      <div className="h-[500px] bg-gradient-to-br from-purple-900 to-dark-900 rounded-3xl backdrop-blur-xl flex items-center justify-center">
+        <div className="animate-pulse w-12 h-12 rounded-full border-4 border-purple-500 border-t-transparent"></div>
+      </div>
+    );
   }
 
+  const currentTrack = featuredTracks[currentIndex];
+
+  // Hàm xử lý khi người dùng chọn phát một bài hát
+  const handlePlayTrack = (track: Track) => {
+    playSong(track.id, track.title);
+  };
+
   return (
-    <div className="relative h-[500px] rounded-[2.5rem] overflow-hidden my-6">
-      <div className="absolute inset-0 backdrop-blur-lg bg-black/20 rounded-[2.5rem]" />
-      <img
-        src={featuredTrack.album.imageUrl}
-        alt={featuredTrack.title}
-        className="absolute inset-0 w-full h-full object-cover opacity-40 rounded-[2.5rem]"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-[2.5rem]" />
-      <div className="relative h-full max-w-screen-xl mx-auto px-12 flex items-center">
-        <div className="max-w-2xl">
-          <h1 className="text-5xl font-bold mb-4 text-white drop-shadow-lg">{featuredTrack.title}</h1>
-          <p className="text-xl text-gray-200 mb-8 drop-shadow-lg">{featuredTrack.artist.name}</p>
+    <div className="h-[500px] relative overflow-hidden rounded-3xl">
+      <div className="absolute inset-0">
+        <img
+          src={currentTrack.album.imageUrl}
+          alt={currentTrack.title}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/80 to-transparent"></div>
+      </div>
+
+      <div className="absolute inset-0 flex flex-col justify-end p-8">
+        <h1 className="text-5xl font-bold text-white mb-3">{currentTrack.title}</h1>
+        <p className="text-xl text-gray-300 mb-8">{currentTrack.artist.name}</p>
+        <div className="flex gap-4">
           <button
-            onClick={() => playTrack(featuredTrack)}
-            className="px-8 py-3 bg-purple-500 bg-opacity-80 backdrop-blur-sm text-white rounded-2xl font-medium hover:bg-purple-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-transparent"
+            onClick={() => handlePlayTrack(currentTrack)}
+            className="px-8 py-3 bg-purple-500 text-white rounded-full font-medium hover:bg-purple-600 transition-colors"
           >
             Play Now
           </button>
+          <button className="px-8 py-3 bg-white/10 text-white rounded-full font-medium backdrop-blur-md hover:bg-white/20 transition-colors">
+            Add to Queue
+          </button>
+        </div>
+
+        <div className="flex gap-2 mt-8">
+          {featuredTracks.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+              className={`w-12 h-1 rounded-full transition-colors ${
+                i === currentIndex ? 'bg-purple-500' : 'bg-white/20'
+              }`}
+            ></button>
+          ))}
         </div>
       </div>
     </div>

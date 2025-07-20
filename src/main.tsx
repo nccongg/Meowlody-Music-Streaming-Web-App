@@ -1,13 +1,16 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-import GlobalStyle from './components/Global/GlobalStyle.tsx';
+import { MusicPlayerProvider } from './contexts/MusicPlayerContext';
+import { ChatProvider } from './contexts/ChatContext';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <GlobalStyle>
-      <App />
-    </GlobalStyle>
-  </StrictMode>,
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <MusicPlayerProvider>
+      <ChatProvider>
+        <App />
+      </ChatProvider>
+    </MusicPlayerProvider>
+  </React.StrictMode>,
 );

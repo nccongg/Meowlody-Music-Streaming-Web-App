@@ -6,6 +6,10 @@ import { Home, Search, Library } from './pages';
 import { AnimatePresence } from 'framer-motion';
 import { AnimatedPage } from './components/AnimatedPage';
 import { VideoBackground } from './components/VideoBackground';
+import { CompanionCharacter } from './components/CompanionCharacter';
+import { Footer } from './components/layout/Footer/Footer';
+import { ChatWidget } from 'infall-chatbot-widget';
+// import 'infall-chatbot-widget/style.css';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -47,6 +51,7 @@ function App() {
     <MusicPlayerProvider>
       <Router basename="/Meowlody">
         <div className="relative min-h-screen text-white flex flex-col">
+          <ChatWidget title="Support Chat" primaryColor="blue" position="bottom-right" />
           <VideoBackground videoSource="./assets/sky.mp4" />
           <div className="flex-1 flex justify-center">
             <MainLayout>
@@ -58,6 +63,8 @@ function App() {
             {/* Fixed height for music player space */}
             <MusicPlayer />
           </div>
+          <Footer />
+          {/* <CompanionCharacter /> */}
         </div>
       </Router>
     </MusicPlayerProvider>

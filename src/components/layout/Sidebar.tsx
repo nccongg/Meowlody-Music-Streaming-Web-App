@@ -20,10 +20,13 @@ export function Sidebar({ className = '' }: SidebarProps) {
 
   return (
     <aside
-      className={`fixed left-0 top-0 bottom-0 w-[var(--sidebar-width-collapsed)] md:hover:w-[var(--sidebar-width-expanded)] backdrop-blur-xl bg-black/30 transition-all duration-300 group z-[var(--z-sidebar)] ${className}`}
+      className={`fixed left-0 top-0 bottom-0 w-[var(--sidebar-width-collapsed)] md:hover:w-[var(--sidebar-width-expanded)] backdrop-blur-xl bg-[#0f0f14]/90 transition-all duration-300 group z-[var(--z-sidebar)] ${className}`}
     >
       <div className="h-full flex flex-col p-4 md:p-[var(--spacing-md)]">
-        <div className="mb-8 md:mb-[var(--spacing-xl)] flex items-center justify-center md:group-hover:justify-start">
+        <Link
+          to="/"
+          className="mb-8 md:mb-[var(--spacing-xl)] flex items-center justify-center md:group-hover:justify-start"
+        >
           <h1 className="text-xl md:text-2xl font-bold text-[var(--color-brand-primary)] overflow-hidden whitespace-nowrap">
             <FontAwesomeIcon
               icon={faCat}
@@ -33,7 +36,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
               Meowlody
             </span>
           </h1>
-        </div>
+        </Link>
 
         <nav className="flex-1 flex flex-col items-center md:group-hover:items-stretch">
           {navItems.map(({ path, icon, label }) => (
@@ -41,7 +44,11 @@ export function Sidebar({ className = '' }: SidebarProps) {
               key={path}
               to={path}
               className={`flex items-center justify-center md:group-hover:justify-start w-full gap-2 md:gap-[var(--spacing-md)] px-3 md:px-[var(--spacing-md)] py-3 md:py-[var(--spacing-sm)] rounded-[var(--radius-md)] mb-2 md:mb-[var(--spacing-xs)] transition-all duration-300 overflow-hidden whitespace-nowrap hover:bg-white/10 
-                ${isActive(path) ? 'text-[var(--color-brand-primary)] bg-white/10' : 'text-[var(--color-text-muted)]'}
+                ${
+                  isActive(path)
+                    ? 'text-[var(--color-brand-primary)] bg-[#ffffff1a] font-bold border-l-4 border-[var(--color-brand-primary)]'
+                    : 'text-[var(--color-text-muted)]'
+                }
               `}
             >
               <FontAwesomeIcon icon={icon} className="w-6 h-6 md:w-[var(--icon-size)] md:h-[var(--icon-size)]" />

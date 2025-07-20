@@ -1,6 +1,5 @@
 import { ReactNode, useState } from 'react';
 import { Sidebar } from './Sidebar';
-import Footer from '../Layouts/Footer/Footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
@@ -39,7 +38,8 @@ export function MainLayout({ children }: MainLayoutProps) {
         >
           <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-[var(--spacing-md)]">{children}</div>
         </main>
-        <Footer />
+        
+        {/* Footer removed from here - will be managed separately */}
       </div>
 
       {/* Mobile Menu Overlay */}

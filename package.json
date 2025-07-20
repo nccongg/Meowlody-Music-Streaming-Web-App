@@ -17,6 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "axios": "^1.8.4",
     "framer-motion": "^12.6.3",
+    "infall-chatbot-widget": "^1.0.8",
     "normalize.css": "^8.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

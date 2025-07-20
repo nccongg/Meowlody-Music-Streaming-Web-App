@@ -151,6 +151,33 @@ class JamendoServiceClass {
 
     return response.results.map(this.transformTrack);
   }
+
+  async getTrackStreamUrl(trackId: string): Promise<string> {
+    console.log(`Getting stream URL for track ID: ${trackId}`);
+    
+    try {
+      // Cách 1: URL trực tiếp download của Jamendo (hoạt động tốt nhất)
+      const directUrl = `https://prod-1.storage.jamendo.com/download/track/${trackId}/mp31/`;
+      console.log(`Using direct Jamendo download URL: ${directUrl}`);
+      return directUrl;
+    } catch (error) {
+      console.error('Error getting Jamendo stream URL:', error);
+      
+      // Fallback: Sử dụng URL thay thế
+      try {
+        const alternateUrl = `https://prod-1.storage.jamendo.com/?trackid=${trackId}&format=mp31&from=app-devsite`;
+        console.log(`Using alternate Jamendo URL format: ${alternateUrl}`);
+        return alternateUrl;
+      } catch (alternateError) {
+        console.error('Error with alternate URL:', alternateError);
+        
+        // Fallback cuối cùng: Sử dụng URL trong tài liệu API
+        const backupUrl = `https://storage.jamendo.com/?trackid=${trackId}&format=mp31`;
+        console.log(`Using backup URL: ${backupUrl}`);
+        return backupUrl;
+      }
+    }
+  }
 }
 
 export const JamendoService = new JamendoServiceClass();

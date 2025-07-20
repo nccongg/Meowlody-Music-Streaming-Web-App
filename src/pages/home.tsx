@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import HeroSection from '../components/Bases/HeroSection';
-import Songs from '../components/Bases/Songs';
+import { Songs } from '../components/Bases/Songs';
 import { Track, Artist as MusicArtist } from '../types/music';
 import { JamendoService } from '../services/api/jamendo';
 
@@ -83,7 +83,7 @@ function Home() {
       <HeroSection />
 
       <div className="mt-16 backdrop-blur-md bg-black/30 p-6 rounded-xl">
-        <Songs title="Trending songs" tracks={trendingSongs} isLoading={isLoading} />
+        <Songs title="Trending songs" tracks={trendingSongs} />
       </div>
 
       <div className="mt-16 backdrop-blur-md bg-black/30 p-6 rounded-xl">
@@ -136,7 +136,7 @@ function Home() {
       </div>
 
       <div className="mt-16 backdrop-blur-md bg-black/30 p-6 rounded-xl">
-        <Songs title="New Music Friday" tracks={newReleases} isLoading={isLoading} />
+        <Songs title="New Music Friday" tracks={newReleases} />
       </div>
 
       <div className="mt-16 mb-8 backdrop-blur-md bg-black/30 p-6 rounded-xl">

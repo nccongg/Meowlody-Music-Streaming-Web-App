@@ -18,52 +18,57 @@ function Header() {
   const location = useLocation();
   const pathName = location.pathname;
   return (
-    <div className="w-[350px] h-screen bg-black border-r-[1px] border-line">
-      <div className="flex w-[100%-10] h-full flex-col p-10 justify-between">
+    <div className="w-[350px] h-screen bg-[#0f0f14] border-r-[1px] border-line fixed left-0 top-0 z-50">
+      <div className="flex w-full h-full flex-col p-6 justify-between overflow-y-auto">
         <div>
-          <Link to="/" className="flex gap-5 items-center mb-10 text-white hover:text-white">
-            <FontAwesomeIcon icon={faMusic} className="w-[28px] h-[28px] text-[var(--primary-color)]" />
-            <span className="text-[24px]">Meowlody</span>
+          <Link to="/" className="flex gap-4 items-center mb-8 text-white hover:text-white">
+            <FontAwesomeIcon icon={faMusic} className="w-7 h-7 text-[var(--primary-color)]" />
+            <span className="text-2xl font-bold">Meowlody</span>
           </Link>
-          <div className="ml-10">
-            <div className="flex items-center p-3 mb-1 border border-transparent focus-within:border focus-within:border-[var(--primary-color)] rounded-lg">
-              <FontAwesomeIcon icon={faSearch} className="w-[24px] h-[24px] pr-7" />
-              <input type="text" placeholder="Search" className="w-full bg-transparent focus:border-0 outline-none" />
+          <div className="mb-6">
+            <div className="flex items-center p-3 mb-4 bg-[#1a1a24] border border-transparent focus-within:border focus-within:border-[var(--primary-color)] rounded-lg">
+              <FontAwesomeIcon icon={faSearch} className="w-5 h-5 text-gray-400 mr-3" />
+              <input type="text" placeholder="Search" className="w-full bg-transparent focus:border-0 outline-none text-white" />
             </div>
             {navItems.map((item, index) => {
               return (
                 <Link
                   key={index}
-                  className={`flex relative items-center hover:bg-[var(--bg-item-color)] hover:text-primary p-5 text-description transition-colors before:absolute before:bottom-0 before:left-[0%] before:w-0 before:h-[2px] before:bg-white ${
-                    pathName === item.path && 'text-white before:transition-all before:duration-500 before:w-full'
+                  className={`flex relative items-center rounded-lg hover:bg-[#1a1a24] hover:text-white p-4 mb-2 text-gray-300 transition-colors ${
+                    pathName === item.path && 'text-white bg-[#1a1a24]'
                   }`}
                   to={item.path}
                 >
-                  <FontAwesomeIcon icon={item.icon} className="w-[24px] h-[24px] pr-7" />
-                  <span className="text-[14px] font-thin">{item.name}</span>
+                  <FontAwesomeIcon icon={item.icon} className="w-5 h-5 mr-4" />
+                  <span className="text-[15px] font-medium">{item.name}</span>
                 </Link>
               );
             })}
           </div>
-          <div className="ml-10 mt-[20px]">
-            <span className="text-[13px] text-description font-thin">Your Playlists</span>
+          <div className="mb-4">
+            <span className="text-sm text-gray-400 font-medium px-2">Your Playlists</span>
+            {/* Placeholder for playlists */}
+            <div className="mt-3 rounded-lg p-4 bg-[#1a1a24] bg-opacity-40 text-gray-400 text-sm">
+              Create your first playlist
+            </div>
           </div>
         </div>
-        <div className="w-full flex flex-col">
-          <div className="w-full h-[1px] bg-line" />
-          {linkItems.map((item, index) => {
-            return (
-              <a
-                className="no-underline text-[14px] text-description pt-[10px] pl-[10px] hover:text-white"
-                key={index}
-                href={item.link}
-              >
-                {item.name}
-              </a>
-            );
-          })}
-          {/* <div className="w-full h-[1px] mt-[10px] bg-line" /> */}
-          <span className="text-[13px] text-description font-thin mt-[10px] pl-[10px]">© 2025 NCCONGG</span>
+        <div className="w-full flex flex-col mt-4">
+          <div className="w-full h-[1px] bg-[#282834] mb-4" />
+          <div className="flex flex-wrap gap-4">
+            {linkItems.map((item, index) => {
+              return (
+                <a
+                  className="no-underline text-sm text-gray-400 hover:text-white transition-colors"
+                  key={index}
+                  href={item.link}
+                >
+                  {item.name}
+                </a>
+              );
+            })}
+          </div>
+          <span className="text-xs text-gray-500 font-thin mt-4">© 2025 NCCONGG</span>
         </div>
       </div>
     </div>
